@@ -1,0 +1,4 @@
+
+20060212 - make sure gencache can write the cache file before you start! 
+
+

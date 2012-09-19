@@ -1,0 +1,30 @@
+On a default install of Ubuntu 6.02 LTS these had to be installed:
+
+
+apt-get install build-essential
+
+
+MIME/Lite.pm 
+http://search.cpan.org/CPAN/authors/id/Y/YV/YVES/MIME-Lite-3.01.tar.gz
+
+File/MimeInfo.pm
+http://search.cpan.org/CPAN/authors/id/P/PA/PARDUS/File-MimeInfo/File-MimeInfo-0.13.tar.gz
+
+File/BaseDir.pm
+http://search.cpan.org/CPAN/authors/id/P/PA/PARDUS/File-BaseDir/File-BaseDir-0.02.tar.gz
+
+WARNING: You don't seem to have a mime-info database.
+apt-get install shared-mime-info
+
+Number::Compare
+http://search.cpan.org/CPAN/authors/id/R/RC/RCLAMP/Number-Compare-0.01.tar.gz
+
+Text::Glob
+http://search.cpan.org/CPAN/authors/id/R/RC/RCLAMP/Text-Glob-0.07.tar.gz
+
+File/Find/Rule.pm
+http://search.cpan.org/CPAN/authors/id/R/RC/RCLAMP/File-Find-Rule-0.30.tar.gz
+
+Digest/SHA1.pm
+http://search.cpan.org/CPAN/authors/id/G/GA/GAAS/Digest-SHA1-2.11.tar.gz
+

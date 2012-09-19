@@ -1,0 +1,140 @@
+MediaPAK
+
+MediaPAK is a concept and a set of utilities that facilitates the distribution of large quantities of media files for redundancy.  These media files are usually large between 1 and 4 gigabytes.
+
+The Problem:
+
+Large quantities or sizable media files are problematic to store and backup.  It is expensive to keep these files on a RAID 1 or 5 systems.  These files are problematic to backup or archive.  A better solution is needed.  Enter MediaPAK.
+
+A Solution:
+
+Using a distributed architecture (your friends and family), media files are grouped into “packs”.  The pack is a list of the media files with associated metadata (including the file’s SHA1 checksum).
+
+Once a “pack” is created, it can be transferred to an external disk and sneaker-netted to additional off-site locations.
+
+Once the files are at the off-site location, the “pack” can be verified.  The verification is the important part.  This ensures that the entire pack is safely at the off-site location.
+
+Simple Example
+
+Bob has some media files.  Here is a list of Bob’s files:
+
+C:\media\video\HalloweenParty2003.avi
+C:\media\video\HalloweenParty2004.avi
+C:\media\audio\ScarySound1.mp3
+C:\media\audio\ScarySound2.mp3
+
+Bob must first generate the “meta-data” for his media files. To do this he runs a utility called “gencache”.
+
+Then Bob uses a utility called “mkpak” to create a “media pack file”.  Bob names the MediaPAK file bobs.pak.
+
+Bob copies his media files (C:\media\*.*) to an external USB disk and gives it to Dave.
+
+Dave copies the files from Bob’s external USB disk to one of his external USB disks.  Dave returns Bob’s external USB disk.
+
+Bob sends Dave the “bobs.pak” file.
+
+Dave uses a utility called “ckpak” to validate or “check” the media files.  The utility examines the “bobs.pak” file and compares it to what is on local disk.
+
+The utility will verify the “media pack” is complete!
+
+Dave sends a message to Bob and says, “Say, I have a complete set of bobs.pak!”.
+
+Bob is happy.  He knows that the files listed in the “bobs.pak” file are safely in an off-site location.
+
+Bob creates more “media pack files”.  The process continues.
+
+About “media files”
+
+Once a media file is created it is static and rarely changes.  In some instances the file may be incomplete or corrupted from the original source or simply encoded incorrectly.  In that case an update to the file must be performed.  This is a special case and must be handled manually.
+
+It would be advised to validate media packs at least quarterly if not monthly.
+
+MediaPAK Architecture
+
+There are at least two players in a MediaPAK transaction:
+
+	The “media pack creator”
+	The “media pack recipient”
+
+Anyone can create a media “pack”.  The resulting “pack” is a file that lists the pack’s contents.
+
+There can be multiple “media pack creators”.
+
+The MediaPAK utilities don’t care where the media files are stored.  They could be on internal, external or network attached disk.  The only requirement is that when you run “gencache”, the media must be on-line at that time.  You will have to manage how you distribute the files on your media.
+
+All of the utilities will look for a MediaPAK cache for files that are not on-line.
+
+
+MediaPAK Utilities
+
+gencache – Creates the .mc (UNIX) or _mc (Windows) folders and .xml files with the metadata.
+
+mkpak – Generates a media pack file.
+
+ckpak - Performs a check on the media files stored locally comparing them against the metadata stored in the media pack file.
+
+cpmissing – Copies missing files to another location based on the output of ckpak.
+
+cleaner – Removes orphan .xml files in the cache folders
+
+path-detector – Validates that a file name and directory name don’t exceed Windows size limits
+
+MediaPAK Internals
+
+GENCACHE
+
+The MediaPAK utilities utilize the metadata created by GENCACHE.
+
+In Bob’s example, the GENCACHE program will create the following folders to store metadata:
+
+Within each folder directory a file will exist for each file in the parent directory:
+
+C:\media\video\.mc\HalloweenParty2003.avi.xml
+C:\media\video\.mc\HalloweenParty2004.avi.xml
+C:\media\audio\.mc\ScarySound1.mp3.xml
+C:\media\audio\.mc\ScarySound2.mp3.xml
+
+GENCACHE is simple to use.  On Windows the utility is called “gencache.exe”.  On UNIX it is called “gencache.pl”.
+
+Running “gencache” with no parameters will print the usage information.
+
+Before Bob can create a “media pack file”, he must generate the metadata cache information.
+
+Bob runs this:
+
+gencache.exe C:\media
+
+This will generate metadata files.
+
+Bob wants to re-generate the metadata files because he has added more media files to the “video” directory.  Simple, run GENCACHE the same way:
+
+gencache.exe C:\media
+
+Existing metadata files are ignored and new media file metadata will be created.
+
+Let’s assume Bob jacked up something and wants to regenerate *all* metadata files even if they exist.  Simple, run GENCACHE this way:
+
+gencache.exe –o C:\media
+
+The “-o” option is for overwrite.
+
+Before Bob creates a “media pack file”, he wants to verify that the media files on disk match the metadata in the cache.  Simple, run GENCACHE this way:
+
+gencache.exe –v C:\media
+
+The “-v” option is for “verify”.  This will verify the actual disk file with its associated metadata file.  This will also regenerate the SHA1 checksum.  If the metafile is out of date, it will be replaced.
+
+NOTE: You can also redirect the $ENV{MEDIPAK}\path.txt file to GENCACHE, and it can read the paths from that.  More examples to follow.
+
+Caveats
+
+Whoever “creates” the media pack is the “media pack creator” and is the “owner” of those pack’s file.  If a media file must be updated because it is corrupt or encoded improperly, the “owner” must regenerate the “media pack file”.
+
+The problem is how to get that updated “media pack file” to the off-site locations.
+
+One possible solution is for the “media pack creator” to store his pack files on an http(s) server.  If a “media pack” is updated, the owner will update the files on the http server.
+
+When an off-site location verifies a pack, the XML file will contain the “media pack creator” URL for that file.  The verification software can then determine if the local “media pack file” is up to date.
+
+Now for something completely different.
+
